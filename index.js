@@ -1,12 +1,12 @@
 const platformImage = new Image()
-platformImage.src = 'http://127.0.0.1:5500/src/imagens/Platform_C.png'
+platformImage.src = './imagens/Platform_C.png'
 const backgoundImage = new Image()
-backgoundImage.src = 'http://127.0.0.1:5500/src/imagens/background_1.png'
+backgoundImage.src = './imagens/background_1.png'
 const montanhaImage = new Image()
-montanhaImage.src = 'http://127.0.0.1:5500/src/imagens/Montanha.png'
+montanhaImage.src = './imagens/Montanha.png'
 
 const spriteRunLeftImage = new Image()
-spriteRunLeftImage.src = 'http://127.0.0.1:5500/src/imagens/Sprite_0.png'
+spriteRunLeftImage.src = './imagens/Sprite_run_left.png'
 
 
 
