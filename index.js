@@ -4,6 +4,8 @@ const backgoundImage = new Image()
 backgoundImage.src = './images/background_1.png'
 const montanhaImage = new Image()
 montanhaImage.src = './images/Montanha.png'
+const winImage = new Image()
+winImage.src = './images/Win.png'
 
 const spriteRunLeftImage = new Image()
 spriteRunLeftImage.src = './images/spriteRunLeft_2.png'
@@ -105,6 +107,22 @@ class Platform {
     }
 }
 
+class Win {
+    constructor({ x, y, winImage}) {
+        this.position = {
+        x,
+        y
+    }
+    this.image = winImage
+    this.width = winImage.width
+    this.height = winImage.height
+    }
+
+    draw() {
+        c.drawImage(this.image, this.position.x, this.position.y)
+    }
+}
+
 class Background {
     constructor({ x, y, backgoundImage}) {
         this.position = {
@@ -141,6 +159,8 @@ let player = new Player()
 let platforms = []
 let background = []
 let montanha = []
+let win = []
+
 
 let lastKey
 const keys = {
@@ -184,6 +204,10 @@ montanha = [
         montanhaImage
       }) ]
 
+win = [
+    new Win({ x: winImage.width + 1900, y:170, winImage })
+      ]
+
 const keys = {
    right: {
      pressed: false  
@@ -209,6 +233,9 @@ function animate() {
         montanha.draw()
     })
 
+    win.forEach(win => {
+        win.draw()
+    })
     player.update()
     platforms.forEach(platform => {
     platform.draw()
@@ -225,15 +252,18 @@ function animate() {
 
       if (keys.right.pressed) {
         scrollOffset += player.speed
+        
         platforms.forEach((platform) => {
             platform.position.x -= player.speed
         })
         background.forEach(background => {
             background.position.x -= player.speed * 0.66
         })
-
         montanha.forEach(montanha=> {
             montanha.position.x -= player.speed * 0.66
+        })
+        win.forEach(win=> {
+            win.position.x -= player.speed * 0.66
         })
     } else if (keys.left.pressed && scrollOffset > 0) {
         scrollOffset -= 5
@@ -248,6 +278,9 @@ function animate() {
       montanha.forEach(montanha=> {
         montanha.position.x += player.speed * 0.66
     })
+
+      win.forEach(win=> {
+        win.position.x += player.speed * 0.66})
     }
     }
 
@@ -304,13 +337,15 @@ console.log(scrollOffset)
             player.currentCropWidth = player.sprites.stand.cropWidth
             player.width = player.sprites.stand.width
             }
- 
 
 
   // Condição de Vitória
     if (scrollOffset > 3500) {
-        console.log ('you win')
+        init()
     }
+     
+        console.log ('you win')
+    
   // Condição de derrota
     if (player.position.y > canvas.height) {
         init()
