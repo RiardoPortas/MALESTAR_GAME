@@ -6,13 +6,13 @@ const montanhaImage = new Image()
 montanhaImage.src = './images/Montanha.png'
 
 const spriteRunLeftImage = new Image()
-spriteRunLeftImage.src = './images/Sprite_run_left.png'
+spriteRunLeftImage.src = './images/spriteRunLeft_2.png'
 
 const spriteRunRightImage = new Image()
 spriteRunRightImage.src = './images/spriteRunRight_2.png'
 
 const spriteStandLeftImage = new Image()
-spriteStandLeftImage.src = './images/Sprite_stand_left.png'
+spriteStandLeftImage.src = './images/spriteStandLeft_2.png'
 
 const spriteStandRightImage = new Image()
 spriteStandRightImage.src = './images/spriteStandRight_2.png'
@@ -23,7 +23,7 @@ const c = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-const gravity = 0.5
+const gravity = 1.5
 
 class Player {
     constructor() {
@@ -53,7 +53,8 @@ class Player {
                 right: spriteRunRightImage,
                 left: spriteRunLeftImage,
                 cropWidth: 341,
-                width: 127.875
+                width: 127.875,
+                height: 160
             }
         }
         this.currentSprite = this.sprites.stand.right
@@ -162,9 +163,10 @@ platforms =
     y:470,
     platformImage
   }), 
-new Platform({ x: platformImage.width += 100, y:520, platformImage}),
+new Platform({ x: platformImage.width += 10, y:520, platformImage}),
 new Platform({ x: platformImage.width * 2 + 100, y:470, platformImage}),
-new Platform({ x: platformImage.width * 3 + 500, y:470, platformImage})
+new Platform({ x: platformImage.width * 3 + 500, y:470, platformImage}),
+new Platform({ x: platformImage.width * 5 + 500, y:470, platformImage})
 ]
 
 background = [
@@ -181,7 +183,7 @@ montanha = [
         y:0,
         montanhaImage
       }) ]
-      
+
 const keys = {
    right: {
      pressed: false  
@@ -266,20 +268,47 @@ console.log(scrollOffset)
 
 // sprite switching conditional
   if (
-    lastKey === 'right' && player.currentSprite !== player.sprites.run.right) {
+    keys.right.pressed &&
+    lastKey === 'right' &&
+    player.currentSprite !== player.sprites.run.right
+    ) {
     player.frames = 1  
     player.currentSprite = player.sprites.run.right
     player.currentCropWidth = player.sprites.run.cropWidth
     player.width = player.sprites.run.width
-    } else if (lastKey === 'left'&& player.currentSprite !== player.sprites.run.left)
-    {player.currentSprite = player.sprites.run.left
-        player.currentCropWidth = player.sprites.run.cropWidth
-        player.width = player.sprites.run.width}
+    } else if (
+    keys.left.pressed && 
+    lastKey === 'left' &&
+    player.currentSprite !== player.sprites.run.left
+    ) {
+    player.frames = 0
+    player.currentSprite = player.sprites.run.left
+    player.currentCropWidth = player.sprites.run.cropWidth
+    player.width = player.sprites.run.width
+    } else if (
+        !keys.left.pressed && 
+        lastKey === 'left' &&
+        player.currentSprite !== player.sprites.stand.left
+        ) {
+        player.frames = 0
+        player.currentSprite = player.sprites.stand.left
+        player.currentCropWidth = player.sprites.stand.cropWidth
+        player.width = player.sprites.stand.width
+        } else if (
+            !keys.right.pressed && 
+            lastKey === 'right' &&
+            player.currentSprite !== player.sprites.stand.right
+            ) {
+            player.frames = 0
+            player.currentSprite = player.sprites.stand.right
+            player.currentCropWidth = player.sprites.stand.cropWidth
+            player.width = player.sprites.stand.width
+            }
  
 
 
   // Condição de Vitória
-    if (scrollOffset > 700) {
+    if (scrollOffset > 3500) {
         console.log ('you win')
     }
   // Condição de derrota
@@ -342,5 +371,11 @@ document.addEventListener('keyup', (keycode) => {
             break
     }
 })
+
+const Prototipo = document.getElementById('Prototipo')
+console.log('1. ', Prototipo)
+
+Prototipo.innerHTML = "Ironhack teste de protótipo"
+
 
 // teste de commit
