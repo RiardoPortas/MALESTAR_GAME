@@ -7,8 +7,12 @@ montanhaImage.src = './images/Montanha.png'
 
 const spriteRunLeftImage = new Image()
 spriteRunLeftImage.src = './images/Sprite_run_left.png'
-
-
+const spriteRunRightImage = new Image()
+spriteRunRightImage.src = './images/Sprite_run_right.png'
+const spriteStandLeftImage = new Image()
+spriteStandLeftImage.src = './images/Sprite_stand_left.png'
+const spriteStandRightImage = new Image()
+spriteStandRightImage.src = './images/Sprite_stand_right.png'
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
@@ -30,17 +34,43 @@ class Player {
             y: 0
         }
 
-        this.width = 100
-        this.height = 30
+        this.width = 66
+        this.height = 150
+
+        this.image = spriteStandRightImage
+        this.frames = 0
+        this.sprites = {
+            stand: {
+                right: spriteStandRightImage,
+                cropWidth: null,
+                width: 66
+            } , 
+            run: {
+                right: spriteRunRightImage,
+                cropWidth: 177
+            }
+        }
+        this.currentSprite = this.sprites.stand.right
+        this.currentCropWidth = 198
     }
 
     draw() {
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.drawImage(
+            this.currentSprite,
+            this.currentCropWidth * this.frames,
+            10,
+            this.currentCropWidth,
+            198, 
+            this.position.x, 
+            this.position.y, 
+            this.width, 
+            this.height)
     }
   
   update() {
-     this.draw()  
+    this.frames++
+    if (this.frames > 10) this.frames = 0 
+    this.draw()  
      this.position.x += this.velocity.x
      this.position.y += this.velocity.y
 
@@ -113,7 +143,6 @@ const keys = {
 }
 
 let scrollOffset = 0
-
 
 function init() {
 
@@ -255,6 +284,8 @@ document.addEventListener('keydown', (keycode) => {
         case 'd':
             console.log('right')
             keys.right.pressed = true
+            player.currentSprite = player.sprites.run.right
+            player.currentCropWidth = player.sprites.run.cropWidth
             break
 
         case 'w':
