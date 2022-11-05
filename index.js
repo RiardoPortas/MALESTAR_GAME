@@ -7,12 +7,15 @@ montanhaImage.src = './images/Montanha.png'
 
 const spriteRunLeftImage = new Image()
 spriteRunLeftImage.src = './images/Sprite_run_left.png'
+
 const spriteRunRightImage = new Image()
-spriteRunRightImage.src = './images/Sprite_run_right.png'
+spriteRunRightImage.src = './images/spriteRunRight_2.png'
+
 const spriteStandLeftImage = new Image()
 spriteStandLeftImage.src = './images/Sprite_stand_left.png'
+
 const spriteStandRightImage = new Image()
-spriteStandRightImage.src = './images/Sprite_stand_right.png'
+spriteStandRightImage.src = './images/spriteStandRight_2.png'
 
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
@@ -26,8 +29,8 @@ class Player {
     constructor() {
         this.speed = 10
         this.position = {
-            x: 30,
-            y: 30
+            x: 100,
+            y: 100
         }
         this.velocity = {
             x: 0,
@@ -42,25 +45,28 @@ class Player {
         this.sprites = {
             stand: {
                 right: spriteStandRightImage,
-                cropWidth: null,
+                left: spriteStandLeftImage,
+                cropWidth: 177,
                 width: 66
             } , 
             run: {
                 right: spriteRunRightImage,
-                cropWidth: 177
+                left: spriteRunLeftImage,
+                cropWidth: 341,
+                width: 127.875
             }
         }
         this.currentSprite = this.sprites.stand.right
-        this.currentCropWidth = 198
+        this.currentCropWidth = 177
     }
 
     draw() {
         c.drawImage(
             this.currentSprite,
             this.currentCropWidth * this.frames,
-            10,
+            0,
             this.currentCropWidth,
-            198, 
+            400, 
             this.position.x, 
             this.position.y, 
             this.width, 
@@ -69,7 +75,9 @@ class Player {
   
   update() {
     this.frames++
-    if (this.frames > 10) this.frames = 0 
+    if (this.frames > 0 && (this.currentSprite === this.sprites.stand.right || this.currentSprite === this.sprites.stand.left)) this.frames = 0 
+    else if (this.frames > 28 && (this.currentSprite === this.sprites.run.right || this.currentSprite === this.sprites.run.left)) this.frames = 0 
+   
     this.draw()  
      this.position.x += this.velocity.x
      this.position.y += this.velocity.y
@@ -133,6 +141,7 @@ let platforms = []
 let background = []
 let montanha = []
 
+let lastKey
 const keys = {
    right: {
      pressed: false  
@@ -153,7 +162,7 @@ platforms =
     y:470,
     platformImage
   }), 
-new Platform({ x: platformImage.width -= 3, y:470, platformImage}),
+new Platform({ x: platformImage.width += 100, y:520, platformImage}),
 new Platform({ x: platformImage.width * 2 + 100, y:470, platformImage}),
 new Platform({ x: platformImage.width * 3 + 500, y:470, platformImage})
 ]
@@ -172,8 +181,7 @@ montanha = [
         y:0,
         montanhaImage
       }) ]
-
-
+      
 const keys = {
    right: {
      pressed: false  
@@ -256,6 +264,20 @@ console.log(scrollOffset)
     } 
   })
 
+// sprite switching conditional
+  if (
+    lastKey === 'right' && player.currentSprite !== player.sprites.run.right) {
+    player.frames = 1  
+    player.currentSprite = player.sprites.run.right
+    player.currentCropWidth = player.sprites.run.cropWidth
+    player.width = player.sprites.run.width
+    } else if (lastKey === 'left'&& player.currentSprite !== player.sprites.run.left)
+    {player.currentSprite = player.sprites.run.left
+        player.currentCropWidth = player.sprites.run.cropWidth
+        player.width = player.sprites.run.width}
+ 
+
+
   // Condição de Vitória
     if (scrollOffset > 700) {
         console.log ('you win')
@@ -275,6 +297,7 @@ document.addEventListener('keydown', (keycode) => {
         case 'a':
             console.log('left')
             keys.left.pressed = true
+            lastKey = 'left'
             break
 
         case 's':
@@ -284,8 +307,7 @@ document.addEventListener('keydown', (keycode) => {
         case 'd':
             console.log('right')
             keys.right.pressed = true
-            player.currentSprite = player.sprites.run.right
-            player.currentCropWidth = player.sprites.run.cropWidth
+            lastKey = 'right'
             break
 
         case 'w':
@@ -312,6 +334,7 @@ document.addEventListener('keyup', (keycode) => {
         case 'd':
             console.log('right')
             keys.right.pressed = false
+            
             break
 
         case 'w':
